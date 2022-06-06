@@ -18,7 +18,7 @@ spec:
         - name: echo
           image: {{ .Values.image }}
           command:
-            - "-text echo"
+            - "-text nyan"
           ports:
             - containerPort: 3000
       volumes:

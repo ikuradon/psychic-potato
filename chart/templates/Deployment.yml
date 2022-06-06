@@ -17,8 +17,9 @@ spec:
       containers:
         - name: echo
           image: {{ .Values.image }}
-          command:
-            - "-text nyan"
+          args:
+            - "-listen=:3000"
+            - "-text=nyan"
           ports:
             - containerPort: 3000
       volumes:

@@ -21,7 +21,7 @@ jobs:
   # Repo owner has commented /ok-to-test on a (fork-based) pull request
   integration-fork:
     runs-on: ubuntu-latest
-    if: 
+    if:
       github.event_name == 'repository_dispatch' &&
       github.event.client_payload.slash_command.sha != '' &&
       contains(github.event.client_payload.pull_request.head.sha, github.event.client_payload.slash_command.sha)
@@ -34,6 +34,18 @@ jobs:
         ref: 'refs/pull/${{ github.event.client_payload.pull_request.number }}/merge'
 
     # <insert integration tests needing secrets>
+    - name: Context
+      uses: okteto/context@latest
+      with:
+        token: ${{ secrets.OKTETO_TOKEN }}
+
+    - name: Deploy preview environment
+      uses: okteto/deploy-preview@latest
+      env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        name: pr-${{ github.event.number }}-ikuradon
+        timeout: 15m
 
     - run: |
         echo "Integration tests... success! ;-)"
@@ -46,7 +58,7 @@ jobs:
         number: ${{ github.event.client_payload.pull_request.number }}
         job: ${{ github.job }}
         # Conveniently, job.status maps to https://developer.github.com/v3/checks/runs/#update-a-check-run
-        conclusion: ${{ job.status }} 
+        conclusion: ${{ job.status }}
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |

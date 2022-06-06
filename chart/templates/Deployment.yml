@@ -19,7 +19,7 @@ spec:
           image: {{ .Values.image }}
           args:
             - "-listen=:3000"
-            - "-text=nyan"
+            - "-text=meu"
           ports:
             - containerPort: 3000
       volumes:

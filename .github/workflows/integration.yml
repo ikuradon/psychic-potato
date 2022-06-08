@@ -7,29 +7,6 @@ on:
 name: Integration tests
 
 jobs:
-  # Branch-based pull request
-  integration-trusted:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-    steps:
-
-    - name: Branch based PR checkout
-      uses: actions/checkout@v2
-
-    # <insert integration tests needing secrets>
-    - name: Context
-      uses: okteto/context@latest
-      with:
-        token: ${{ secrets.OKTETO_TOKEN }}
-
-    - name: Deploy preview environment
-      uses: okteto/deploy-preview@latest
-      env:
-       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        name: pr-${{ github.event.number }}-ikuradon
-        timeout: 15m
-
   # Repo owner has commented /ok-to-test on a (fork-based) pull request
   integration-fork:
     runs-on: ubuntu-latest
@@ -52,15 +29,12 @@ jobs:
         token: ${{ secrets.OKTETO_TOKEN }}
 
     - name: Deploy preview environment
-      uses: okteto/deploy-preview@latest
+      uses: ikuradon/deploy-preview@latest
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: pr-${{ github.event.client_payload.pull_request.number }}-ikuradon
+        name: pr-${{ github.event.client_payload.pull_request.number }}-prrrr
         timeout: 15m
-
-    - run: |
-        echo "Integration tests... success! ;-)"
 
     # Update check run called "integration-fork"
     - uses: actions/github-script@v5
